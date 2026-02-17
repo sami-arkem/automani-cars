@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Inventory — Automani Cars</title>
+    <meta name="description"
+        content="Browse our verified collection of quality pre-owned cars. Filter by make, model, price, and more.">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav" id="navbar">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">🚗</div>
+                Automani <span class="accent">Cars</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="/">Home</a>
+                <a href="/inventory.html" class="active">Inventory</a>
+                <a href="tel:+919876543210">📞 Call Us</a>
+                <a href="https://wa.me/919876543210?text=Hi%20Automani%20Cars%2C%20I%27m%20interested%20in%20buying%20a%20car"
+                    class="nav-cta" target="_blank">💬 WhatsApp</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="inventory-layout">
+
+            <!-- Filters Toggle (Mobile) -->
+            <button class="filters-toggle" id="filtersToggle" style="grid-column: 1 / -1;">
+                🔍 Filters & Search
+            </button>
+
+            <!-- Filters Sidebar -->
+            <aside class="filters-panel" id="filtersPanel">
+                <h3>
+                    Filters
+                    <button class="btn btn-sm" id="clearFilters"
+                        style="background: var(--gray-100); color: var(--gray-600); border: none; font-size: 0.8rem;">Clear
+                        All</button>
+                </h3>
+
+                <div class="filter-group">
+                    <label>Make / Brand</label>
+                    <select id="filterMake">
+                        <option value="">All Makes</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Fuel Type</label>
+                    <select id="filterFuel">
+                        <option value="">All Fuel Types</option>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="CNG">CNG</option>
+                        <option value="Electric">Electric</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Transmission</label>
+                    <select id="filterTransmission">
+                        <option value="">All</option>
+                        <option value="Manual">Manual</option>
+                        <option value="Automatic">Automatic</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Year</label>
+                    <select id="filterYear">
+                        <option value="">All Years</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Price Range</label>
+                    <div class="price-range">
+                        <input type="number" id="filterMinPrice" placeholder="Min ₹" step="50000">
+                        <input type="number" id="filterMaxPrice" placeholder="Max ₹" step="50000">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>KM Driven</label>
+                    <div class="price-range">
+                        <input type="number" id="filterMinKms" placeholder="Min km">
+                        <input type="number" id="filterMaxKms" placeholder="Max km">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="filterStatus">
+                        <option value="available">Available</option>
+                        <option value="">All (incl. Sold)</option>
+                        <option value="sold">Sold Only</option>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="btn btn-primary" id="applyFilters">Apply</button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="inventory-main">
+                <div class="inventory-header">
+                    <div class="search-bar">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search make, model, or keyword...">
+                    </div>
+                    <select class="sort-select" id="sortSelect">
+                        <option value="newest">Newest First</option>
+                        <option value="price_asc">Price: Low → High</option>
+                        <option value="price_desc">Price: High → Low</option>
+                        <option value="year_desc">Year: Newest</option>
+                        <option value="kms_asc">KM: Lowest</option>
+                    </select>
+                </div>
+
+                <div class="results-count" id="resultsCount"></div>
+
+                <div class="cars-grid" id="carsGrid">
+                    <div class="spinner"></div>
+                </div>
+
+                <div class="pagination" id="pagination"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 60px;">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2026 Automani Cars. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/inventory.js"></script>
+</body>
+
+</html>

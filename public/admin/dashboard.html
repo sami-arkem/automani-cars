@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Automani Cars Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/admin/admin.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <h2>Automani <span class="accent">Cars</span></h2>
+                <small>Admin Panel</small>
+            </div>
+            <nav class="admin-nav">
+                <a href="/admin/dashboard.html" class="active">📊 Dashboard</a>
+                <a href="/admin/editor.html">➕ Add Car</a>
+                <a href="/" target="_blank">🌐 View Website</a>
+            </nav>
+            <div class="admin-sidebar-footer">
+                <button onclick="logout()">🚪 Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1>Dashboard</h1>
+                <a href="/admin/editor.html" class="btn btn-primary btn-sm">➕ Add New Car</a>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="label">Total Cars</div>
+                    <div class="value blue" id="statTotal">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Available</div>
+                    <div class="value" id="statAvailable" style="color: #059669;">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Sold</div>
+                    <div class="value orange" id="statSold">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Enquiries</div>
+                    <div class="value" id="statLeads">—</div>
+                </div>
+            </div>
+
+            <!-- Cars Table -->
+            <div class="admin-table-wrapper">
+                <div class="admin-table-header">
+                    <h3>All Listings</h3>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Car</th>
+                                <th>Year</th>
+                                <th>Price</th>
+                                <th>Fuel</th>
+                                <th>KMs</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="carsTableBody">
+                            <tr>
+                                <td colspan="8" style="text-align:center; padding: 40px;">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Leads Section -->
+            <div class="leads-wrapper">
+                <div class="admin-table-wrapper">
+                    <div class="admin-table-header">
+                        <h3>Recent Enquiries</h3>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Car</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leadsTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align:center; padding: 40px;">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/admin/admin.js"></script>
+</body>
+
+</html>

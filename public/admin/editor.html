@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Edit Car — Automani Cars Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/admin/admin.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <h2>Automani <span class="accent">Cars</span></h2>
+                <small>Admin Panel</small>
+            </div>
+            <nav class="admin-nav">
+                <a href="/admin/dashboard.html">📊 Dashboard</a>
+                <a href="/admin/editor.html" class="active">➕ Add Car</a>
+                <a href="/" target="_blank">🌐 View Website</a>
+            </nav>
+            <div class="admin-sidebar-footer">
+                <button onclick="logout()">🚪 Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 id="editorTitle">Add New Car</h1>
+                <a href="/admin/dashboard.html" class="btn btn-outline btn-sm">← Back to Dashboard</a>
+            </div>
+
+            <div class="editor-form">
+                <form id="carForm">
+                    <h2>Car Details</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Make / Brand *</label>
+                            <input type="text" id="carMake" placeholder="e.g. Maruti Suzuki" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Model *</label>
+                            <input type="text" id="carModel" placeholder="e.g. Swift" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Year *</label>
+                            <input type="number" id="carYear" placeholder="2023" min="2000" max="2026" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₹) *</label>
+                            <input type="number" id="carPrice" placeholder="695000" min="10000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>KM Driven *</label>
+                            <input type="number" id="carKms" placeholder="18000" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Fuel Type</label>
+                            <select id="carFuel">
+                                <option value="Petrol">Petrol</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="CNG">CNG</option>
+                                <option value="Electric">Electric</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Transmission</label>
+                            <select id="carTransmission">
+                                <option value="Manual">Manual</option>
+                                <option value="Automatic">Automatic</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Owners</label>
+                            <select id="carOwners">
+                                <option value="1">1st Owner</option>
+                                <option value="2">2nd Owner</option>
+                                <option value="3">3rd Owner</option>
+                                <option value="4">4th+ Owner</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Registration City</label>
+                            <input type="text" id="carRegCity" placeholder="e.g. Mumbai">
+                        </div>
+                        <div class="form-group">
+                            <label>Insurance Valid Until</label>
+                            <input type="text" id="carInsurance" placeholder="e.g. Dec 2026">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="carStatus">
+                                <option value="available">Available</option>
+                                <option value="sold">Sold</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Badge</label>
+                            <select id="carBadge">
+                                <option value="">None</option>
+                                <option value="New">New</option>
+                                <option value="Hot">Hot</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="carDescription"
+                            placeholder="Describe the car's condition, features, service history, etc."></textarea>
+                    </div>
+
+                    <h2>Photos</h2>
+
+                    <div class="photo-upload-area" id="photoUploadArea">
+                        <div class="icon">📸</div>
+                        <p>Click or drag & drop photos here<br><small>JPEG, PNG, WebP — Max 10MB each</small></p>
+                        <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" multiple>
+                    </div>
+
+                    <div class="photo-previews" id="photoPreviews"></div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Save Car</button>
+                        <a href="/admin/dashboard.html" class="btn btn-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="/admin/admin.js"></script>
+    <script>
+        // Editor-specific logic
+        let editingId = null;
+        let existingPhotos = [];
+        let newFiles = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            editingId = params.get('id');
+
+            if (editingId) {
+                document.getElementById('editorTitle').textContent = 'Edit Car';
+                loadCarForEditing(editingId);
+            }
+
+            setupPhotoUpload();
+        });
+
+        async function loadCarForEditing(id) {
+            try {
+                const res = await fetch(`/api/cars/${id}`);
+                const car = await res.json();
+
+                document.getElementById('carMake').value = car.make;
+                document.getElementById('carModel').value = car.model;
+                document.getElementById('carYear').value = car.year;
+                document.getElementById('carPrice').value = car.price;
+                document.getElementById('carKms').value = car.kms;
+                document.getElementById('carFuel').value = car.fuel;
+                document.getElementById('carTransmission').value = car.transmission;
+                document.getElementById('carOwners').value = car.owners;
+                document.getElementById('carRegCity').value = car.reg_city || '';
+                document.getElementById('carInsurance').value = car.insurance_validity || '';
+                document.getElementById('carStatus').value = car.status;
+                document.getElementById('carBadge').value = car.badge || '';
+                document.getElementById('carDescription').value = car.description || '';
+
+                // Load existing photos
+                existingPhotos = safeParseJSON(car.photos);
+                renderPhotoPreviews();
+            } catch (err) {
+                showToast('Failed to load car details', 'error');
+            }
+        }
+
+        function setupPhotoUpload() {
+            const area = document.getElementById('photoUploadArea');
+            const input = document.getElementById('photoInput');
+
+            area.addEventListener('click', () => input.click());
+
+            area.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                area.style.borderColor = 'var(--primary)';
+                area.style.background = 'var(--primary-light)';
+            });
+
+            area.addEventListener('dragleave', () => {
+                area.style.borderColor = '';
+                area.style.background = '';
+            });
+
+            area.addEventListener('drop', (e) => {
+                e.preventDefault();
+                area.style.borderColor = '';
+                area.style.background = '';
+                handleFiles(e.dataTransfer.files);
+            });
+
+            input.addEventListener('change', () => {
+                handleFiles(input.files);
+                input.value = '';
+            });
+        }
+
+        function handleFiles(files) {
+            for (const file of files) {
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast(`${file.name} is too large (max 10MB)`, 'error');
+                    continue;
+                }
+                newFiles.push(file);
+            }
+            renderPhotoPreviews();
+        }
+
+        function renderPhotoPreviews() {
+            const container = document.getElementById('photoPreviews');
+            let html = '';
+
+            // Existing photos
+            existingPhotos.forEach((src, i) => {
+                html += `
+          <div class="photo-preview">
+            <img src="${src}" alt="Photo ${i + 1}">
+            <button type="button" class="remove-photo" onclick="removeExistingPhoto(${i})">✕</button>
+          </div>
+        `;
+            });
+
+            // New file previews
+            newFiles.forEach((file, i) => {
+                const url = URL.createObjectURL(file);
+                html += `
+          <div class="photo-preview">
+            <img src="${url}" alt="${file.name}">
+            <button type="button" class="remove-photo" onclick="removeNewFile(${i})">✕</button>
+          </div>
+        `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function removeExistingPhoto(index) {
+            existingPhotos.splice(index, 1);
+            renderPhotoPreviews();
+        }
+
+        function removeNewFile(index) {
+            newFiles.splice(index, 1);
+            renderPhotoPreviews();
+        }
+
+        // Form submit
+        document.getElementById('carForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const formData = new FormData();
+            formData.append('make', document.getElementById('carMake').value);
+            formData.append('model', document.getElementById('carModel').value);
+            formData.append('year', document.getElementById('carYear').value);
+            formData.append('price', document.getElementById('carPrice').value);
+            formData.append('kms', document.getElementById('carKms').value);
+            formData.append('fuel', document.getElementById('carFuel').value);
+            formData.append('transmission', document.getElementById('carTransmission').value);
+            formData.append('owners', document.getElementById('carOwners').value);
+            formData.append('reg_city', document.getElementById('carRegCity').value);
+            formData.append('insurance_validity', document.getElementById('carInsurance').value);
+            formData.append('status', document.getElementById('carStatus').value);
+            formData.append('badge', document.getElementById('carBadge').value);
+            formData.append('description', document.getElementById('carDescription').value);
+
+            // For edit: send existing photos list
+            if (editingId) {
+                formData.append('existingPhotos', JSON.stringify(existingPhotos));
+            }
+
+            // Append new files
+            newFiles.forEach(file => formData.append('photos', file));
+
+            try {
+                const url = editingId ? `/api/cars/${editingId}` : '/api/cars';
+                const method = editingId ? 'PUT' : 'POST';
+
+                const res = await fetch(url, { method, body: formData });
+
+                if (res.ok) {
+                    showToast(editingId ? 'Car updated successfully!' : 'Car added successfully!', 'success');
+                    setTimeout(() => window.location.href = '/admin/dashboard.html', 1000);
+                } else {
+                    const data = await res.json();
+                    showToast(data.error || 'Failed to save car', 'error');
+                }
+            } catch (err) {
+                showToast('Network error. Please try again.', 'error');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Save Car';
+        });
+
+        function safeParseJSON(str) {
+            try { return JSON.parse(str || '[]'); } catch { return []; }
+        }
+    </script>
+</body>
+
+</html>
